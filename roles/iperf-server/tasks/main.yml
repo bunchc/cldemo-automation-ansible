@@ -4,4 +4,4 @@
   apt: name=iperf update_cache=yes
 
 - name: install bmon
-  apt: name=bmon update_chche=yes
+  apt: name=bmon update_cache=yes
