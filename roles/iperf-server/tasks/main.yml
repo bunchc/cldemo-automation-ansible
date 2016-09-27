@@ -1,0 +1,7 @@
+# Install bmon for watching the traffic & iperf for generating it
+
+- name: install iperf
+  apt: name=iperf update_cache=yes
+
+- name: install bmon
+  apt: name=bmon update_chche=yes
