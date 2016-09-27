@@ -19,15 +19,15 @@
   become_method: sudo
   roles:
     - ifupdown
-- hosts: server01
-  user: cumulus
-  become: yes
-  become_method: sudo
-  roles:
-    - iperf-client
 - hosts: server02
   user: cumulus
   become: yes
   become_method: sudo
   roles:
     - iperf-server
+- hosts: server01
+  user: cumulus
+  become: yes
+  become_method: sudo
+  roles:
+    - iperf-client

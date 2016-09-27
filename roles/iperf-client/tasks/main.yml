@@ -1,54 +1,22 @@
 # Install bmon for watching the traffic & iperf for generating it
 
-- name: install iperf
+- name: Install iperf
   apt: name=iperf update_cache=yes
 
-# Here is where the TC magic happens
+- name: Install bmon
+  apt: name=bmon update_cache=yes
 
-- name: Set eth1 to htb
-  command: "tc qdisc add dev eth1 root handle 1: htb"
-  become: true
-  become_user: root
-  become_method: sudo
+- name: Install ruby
+  apt: name=ruby update_cache=yes
 
-- name: Configure an htb class for port 8000 traffic
-  command: "tc class add dev eth1 parent 1: classid 1:8000 htb rate 1Mbit"
-  become: true
-  become_user: root
-  become_method: sudo
+- name: Install tmuxinator
+  gem: name=tmuxinator
 
-- name: Configure an htb class for port 8080 traffic
-  command: "tc class add dev eth1 parent 1: classid 1:8080 htb rate 500kbit"
-  become: true
-  become_user: root
-  become_method: sudo
+- name: Setup tmuxinator environment
+  template: src=/templates/iperf.yml dst=~/.tmuxinator/iperf.yml owner=cumulus
 
-- name: Configure a filter for dest port 8000 traffic using tc filtering
-  command: "tc filter add dev eth1 protocol ip parent 1: prio 1 u32 match ip dport 80 0xffff flowid 1:80"
+- name: Start tmuxinator
+  command: tmuxinator start iperf
   become: true
-  become_user: root
-  become_method: sudo
-
-- name: Configure a filter for source port 8000 traffic using tc filtering
-  command: "tc filter add dev eth1 protocol ip parent 1: prio 1 u32 match ip sport 80 0xffff flowid 1:80"
-  become: true
-  become_user: root
-  become_method: sudo
-
-- name: Configure a filter for port 8080 traffic using iptables filtering
-  command: "tc filter add dev eth1 proto ip parent 1: prio 2 handle 6 fw flowid 1:1"
-  become: true
-  become_user: root
-  become_method: sudo
-
-- name: Create new iptables chain for marking packets
-  command: iptables -N PREROUTING
-  become: true
-  become_user: root
-  become_method: sudo
-
-- name: Mark port 8080 traffic with iptables
-  command: iptables -A PREROUTING -i eth1 -p tcp --sport 8080 --dport 8080 -j MARK --set-mark 6
-  become: true
-  become_user: root
+  become_user: cumulus
   become_method: sudo

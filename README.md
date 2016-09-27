@@ -18,11 +18,11 @@ Quickstart: Run the demo
     sudo apt-add-repository ppa:ansible/ansible -y
     sudo apt-get update
     sudo apt-get install ansible -qy
-    git clone https://github.com/cumulusnetworks/cldemo-automation-ansible
-    cd cldemo-automation-ansible
+    git clone https://github.com/bunchc/linux-tc-demo
+    cd linux-tc-demo
     ansible-playbook run-demo.yml
     ssh server01
-    wget 172.16.2.101
+    sudo 
     cat index.html
 
 
