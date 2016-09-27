@@ -13,10 +13,4 @@
   gem: name=tmuxinator
 
 - name: Setup tmuxinator environment
-  template: src=/templates/iperf.yml dst=~/.tmuxinator/iperf.yml owner=cumulus
-
-- name: Start tmuxinator
-  command: tmuxinator start iperf
-  become: true
-  become_user: cumulus
-  become_method: sudo
+  template: src=/templates/iperf.yml dest=~/.tmuxinator/iperf.yml owner=cumulus
