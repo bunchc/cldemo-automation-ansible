@@ -54,3 +54,16 @@ Setting up the Infrastructure
 -----------------------------
 This lab configures HTB or hierarchical token bucket as the preferred packet scheduler on ```server02```. It then creates two traffic classes, one for port 8000 and one for port 8080. From there it creates three filters. The first two are using the u32 syntax of tc to filter on inbound and outbound ports. The third filter identifies traffic classified by IPTABLES.
 
+
+Resources
+---------
+The following links explain TC and how to use it in some depth and provided the background reading for this lab.
+
+- [http://tldp.org/HOWTO/Traffic-Control-HOWTO/elements.html](http://tldp.org/HOWTO/Traffic-Control-HOWTO/elements.html)
+- [http://stackoverflow.com/questions/9513981/rtnetlink-answers-no-such-file-or-directory-error](http://stackoverflow.com/questions/9513981/rtnetlink-answers-no-such-file-or-directory-error)
+- [http://docs.openstack.org/developer/neutron/devref/quality_of_service.html#linux-bridge](http://docs.openstack.org/developer/neutron/devref/quality_of_service.html#linux-bridge)
+- [https://linux.die.net/man/8/tc-htb](https://linux.die.net/man/8/tc-htb)
+- [http://www.tldp.org/HOWTO/html_single/Traffic-Control-HOWTO/#sc-wondershaper](http://www.tldp.org/HOWTO/html_single/Traffic-Control-HOWTO/#sc-wondershaper)
+- [http://lartc.org/howto/lartc.cookbook.fullnat.intro.html](http://lartc.org/howto/lartc.cookbook.fullnat.intro.html)
+- [https://www.linux.com/blog/tc-show-manipulate-traffic-control-settings](https://www.linux.com/blog/tc-show-manipulate-traffic-control-settings)
+- [http://luxik.cdi.cz/~devik/qos/htb/](http://luxik.cdi.cz/~devik/qos/htb/)
