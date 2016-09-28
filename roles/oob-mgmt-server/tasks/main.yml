@@ -1,0 +1,22 @@
+# Install tmuxinator and connect to the various servers in the environment
+
+- name: Install ruby
+  apt: name=ruby update_cache=yes
+
+- name: Install tmuxinator
+  command: gem install tmuxinator
+  become: true
+  become_user: root
+  become_method: sudo
+
+- name: Ensure tmuxinator folder
+  file: path=~/.tmuxinator/ state=directory
+  become: true
+  become_user: cumulus
+  become_method: sudo
+
+- name: Setup tmuxinator environment
+  template: src=templates/iperf.yml dest=~/.tmuxinator/iperf.yml owner=cumulus
+  become: true
+  become_user: cumulus
+  become_method: sudo

@@ -54,9 +54,32 @@ Setting up the Infrastructure
 -----------------------------
 This lab configures HTB or hierarchical token bucket as the preferred packet scheduler on ```server02```. It then creates two traffic classes, one for port 8000 and one for port 8080. From there it creates three filters. The first two are using the u32 syntax of tc to filter on inbound and outbound ports. The third filter identifies traffic classified by IPTABLES.
 
-Exploring server02
-------------------
+### Exploring server02
 Your tmux session on server01 will have a window configured to ssh in to server02 as the user cumulus. Select this window by pressing ctrl+b 
+
+#### Show the tc queuing type for eth1
+
+```
+tc qdisc show dev eth1
+```
+
+You'll see that the you have htb configured.
+
+#### Show the tc classifications for eth1
+
+```
+tc qdisc class show dev eth1
+```
+
+The above command lists each of the classes running on eth1:
+
+#### Show the tc filters on eth1
+
+```
+tc qdisc filter show dev eth1
+```
+
+Here you will see three filters. Two with the u32 classifier, one set to look for packets marked by IPTables:
 
 
 Resources
