@@ -5,12 +5,3 @@
 
 - name: Install bmon
   apt: name=bmon update_cache=yes
-
-- name: Install ruby
-  apt: name=ruby update_cache=yes
-
-- name: Install tmuxinator
-  gem: name=tmuxinator
-
-- name: Setup tmuxinator environment
-  template: src=/templates/iperf.yml dest=~/.tmuxinator/iperf.yml owner=cumulus

@@ -9,3 +9,6 @@ spine02
 [servers]
 server01
 server02
+
+[oob-mgmt-server]
+oob-mgmt-server

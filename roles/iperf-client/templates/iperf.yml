@@ -23,9 +23,9 @@ root: ~/
 
 windows:
   - iperf:
-      layout: main-vertical
+      layout: even-vertical
       panes:
-        - iperf -c server02 -t 300 -r -p 8000
-        - sudo iperf -c server02 -t 300 -r -p8080
-        - sudo bmon
+        - ssh server01 -t "sudo iperf -c server02 -t 300 -r -p 8000"
+        - ssh server01 -t "sudo iperf -c server02 -t 300 -r -p8080"
+        - ssh server01 "sudo bmon"
         - ssh server02
