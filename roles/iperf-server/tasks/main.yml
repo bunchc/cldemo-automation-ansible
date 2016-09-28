@@ -3,6 +3,9 @@
 - name: install iperf
   apt: name=iperf update_cache=yes
 
+- name: Install bmon
+  apt: name=bmon update_cache=yes
+
 # Here is where the TC magic happens
 
 - name: Set eth1 to htb

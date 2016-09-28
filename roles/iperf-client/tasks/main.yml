@@ -2,6 +2,3 @@
 
 - name: Install iperf
   apt: name=iperf update_cache=yes
-
-- name: Install bmon
-  apt: name=bmon update_cache=yes
