@@ -22,7 +22,6 @@ Quickstart: Run the demo
     git clone https://github.com/bunchc/linux-tc-demo
     cd linux-tc-demo
     ansible-playbook run-demo.yml
-    ssh server01
     tmuxinator start iperf
 
 
@@ -76,7 +75,15 @@ The above command lists each of the classes running on eth1:
 #### Show the tc filters on eth1
 
 ```
-tc qdisc filter show dev eth1
+tc qdisc filter show dev eth2
+ilter parent 1: protocol ip pref 1 u32
+filter parent 1: protocol ip pref 1 u32 fh 800: ht divisor 1
+filter parent 1: protocol ip pref 1 u32 fh 800::800 order 2048 key ht 800 bkt 0 flowid 1:80
+  match 00001f40/0000ffff at 20
+filter parent 1: protocol ip pref 1 u32 fh 800::801 order 2049 key ht 800 bkt 0 flowid 1:80
+  match 1f400000/ffff0000 at 20
+filter parent 1: protocol ip pref 2 fw
+filter parent 1: protocol ip pref 2 fw handle 0x6 classid 1:1
 ```
 
 Here you will see three filters. Two with the u32 classifier, one set to look for packets marked by IPTables:
