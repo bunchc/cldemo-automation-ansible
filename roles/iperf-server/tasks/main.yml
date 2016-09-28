@@ -51,7 +51,7 @@
   become_method: sudo
 
 - name: Mark port 8080 traffic with iptables
-  command: iptables -A PREROUTING -i eth2 -p tcp --sport 8080 --dport 8080 -j MARK --set-mark 6
+  command: iptables -A PREROUTING -t mangle -i eth2 -p tcp --sport 8080 --dport 8080 -j MARK --set-mark 6
   become: true
   become_user: root
   become_method: sudo
