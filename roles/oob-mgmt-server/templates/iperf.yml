@@ -25,7 +25,7 @@ windows:
   - iperf:
       layout: tiled
       panes:
-        - ssh server02 -t "sudo iperf -s"
-        - ssh server01 -t "sleep 10; sudo iperf -c server02 -t 300 -r -p 8000"
-        - ssh server01 -t "sleep 10; sudo iperf -c server02 -t 300 -r -p 8080"
+        - ssh server01 -t "sleep 10; sudo iperf -c 172.16.2.101 -t 300 -r -p 8000"
+        - ssh server01 -t "sleep 10; sudo iperf -c 172.16.2.101 -t 300 -r -p 8080"
+        - ssh server02 -t "sudo iperf -s -p 8000"
         - ssh server02 -t "sudo bmon"
