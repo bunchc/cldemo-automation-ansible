@@ -27,13 +27,13 @@
   become_method: sudo
 
 - name: Configure a filter for dest port 8000 traffic using tc filtering
-  command: "tc filter add dev eth2 protocol ip parent 1: prio 1 u32 match ip dport 80 0xffff flowid 1:80"
+  command: "tc filter add dev eth2 protocol ip parent 1: prio 1 u32 match ip dport 8000 0xffff flowid 1:80"
   become: true
   become_user: root
   become_method: sudo
 
 - name: Configure a filter for source port 8000 traffic using tc filtering
-  command: "tc filter add dev eth2 protocol ip parent 1: prio 1 u32 match ip sport 80 0xffff flowid 1:80"
+  command: "tc filter add dev eth2 protocol ip parent 1: prio 1 u32 match ip sport 8000 0xffff flowid 1:80"
   become: true
   become_user: root
   become_method: sudo
