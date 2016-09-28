@@ -16,7 +16,7 @@
   become_method: sudo
 
 - name: Setup tmuxinator environment
-  template: src=templates/iperf.yml dest=~/.tmuxinator/iperf.yml owner=cumulus
+  template: src=roles/oob-mgmt-server/templates/iperf.yml dest=~/.tmuxinator/iperf.yml owner=cumulus
   become: true
   become_user: cumulus
   become_method: sudo
