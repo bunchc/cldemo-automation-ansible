@@ -31,3 +31,9 @@
   become_method: sudo
   roles:
     - iperf-client
+- hosts: oob-mgmt-server
+  user: cumulus
+  become: yes
+  become_method: sudo
+  roles:
+    - oob-mgmt-server
