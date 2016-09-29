@@ -45,13 +45,12 @@
   become_method: sudo
 
 - name: Mark port 8080 traffic with iptables
-  command: iptables -t mangle -A PREROUTING -i eth2 -p tcp -m tcp --sport 8080 -j MARK --set-mark 6
-  become: true
-  become_user: root
-  become_method: sudo
-
-- name: Mark port 8080 traffic with iptables
-  command: iptables -t mangle -A PREROUTING -i eth2 -p tcp -m tcp --dport 8080 -j MARK --set-mark 6
+  command: "{{ item }}"
+  with_items:
+    - iptables -t mangle -A OUTPUT -p tcp -m tcp --sport 8080 -j MARK --set-mark 6
+    - iptables -t mangle -A OUTPUT -p tcp -m tcp --dport 8080 -j MARK --set-mark 6
+    - iptables -t mangle -A OUTPUT -p tcp -m tcp --sport 8080 -j RETURN
+    - iptables -t mangle -A OUTPUT -p tcp -m tcp --dport 8080 -j RETURN
   become: true
   become_user: root
   become_method: sudo
