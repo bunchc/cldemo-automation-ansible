@@ -20,12 +20,6 @@
   become_user: root
   become_method: sudo
 
-- name: Configure an htb class for port 8080 traffic
-  command: "tc class add dev eth2 parent 1: classid 1:8080 htb rate 500kbit"
-  become: true
-  become_user: root
-  become_method: sudo
-
 - name: Configure a filter for dest port 8000 traffic using tc filtering
   command: "tc filter add dev eth2 protocol ip parent 1: prio 1 u32 match ip dport 8000 0xffff flowid 1:8000"
   become: true
@@ -38,20 +32,26 @@
   become_user: root
   become_method: sudo
 
+- name: Configure an htb class for port 8080 traffic
+  command: "tc class add dev eth2 parent 1: classid 1:8080 htb rate 500kbit"
+  become: true
+  become_user: root
+  become_method: sudo
+
 - name: Configure a filter for port 8080 traffic using iptables filtering
   command: "tc filter add dev eth2 proto ip parent 1: prio 2 handle 6 fw flowid 1:8080"
   become: true
   become_user: root
   become_method: sudo
 
-- name: Create new iptables chain for marking packets
-  command: iptables -N PREROUTING
+- name: Mark port 8080 traffic with iptables
+  command: iptables -t mangle -A PREROUTING -i eth2 -p tcp -m tcp --sport 8080 -j MARK --set-mark 6
   become: true
   become_user: root
   become_method: sudo
 
 - name: Mark port 8080 traffic with iptables
-  command: iptables -A PREROUTING -t mangle -i eth2 -p tcp --sport 8080 --dport 8080 -j MARK --set-mark 6
+  command: iptables -t mangle -A PREROUTING -i eth2 -p tcp -m tcp --dport 8080 -j MARK --set-mark 6
   become: true
   become_user: root
   become_method: sudo

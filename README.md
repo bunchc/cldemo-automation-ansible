@@ -76,7 +76,12 @@ The above command lists each of the classes running on eth1:
 
 ```
 tc qdisc filter show dev eth2
-ilter parent 1: protocol ip pref 1 u32
+```
+
+Here you will see three filters. Two with the u32 classifier, one set to look for packets marked by IPTables:
+
+```
+filter parent 1: protocol ip pref 1 u32
 filter parent 1: protocol ip pref 1 u32 fh 800: ht divisor 1
 filter parent 1: protocol ip pref 1 u32 fh 800::800 order 2048 key ht 800 bkt 0 flowid 1:80
   match 00001f40/0000ffff at 20
@@ -85,8 +90,6 @@ filter parent 1: protocol ip pref 1 u32 fh 800::801 order 2049 key ht 800 bkt 0 
 filter parent 1: protocol ip pref 2 fw
 filter parent 1: protocol ip pref 2 fw handle 0x6 classid 1:1
 ```
-
-Here you will see three filters. Two with the u32 classifier, one set to look for packets marked by IPTables:
 
 
 Resources
