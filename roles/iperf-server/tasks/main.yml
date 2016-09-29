@@ -39,7 +39,7 @@
   become_method: sudo
 
 - name: Configure a filter for port 8080 traffic using iptables filtering
-  command: "tc filter add dev eth2 proto ip parent 1: prio 2 handle 6 fw flowid 1:8080"
+  command: "tc filter add dev eth2 proto ip parent 1: prio 6 handle 6 fw classid 1:8080"
   become: true
   become_user: root
   become_method: sudo
