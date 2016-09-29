@@ -30,6 +30,6 @@ windows:
         - ssh server02 -t "sudo iperf -s -p 8000"
         - ssh server02 -t "sudo iperf -s -p 8080"
   - bmon:
-    layout: tiled
-    panes:
-      - ssh server02 -t "sudo bmon"
+      layout: tiled
+      panes:
+        - ssh server02 -t "sudo bmon"
