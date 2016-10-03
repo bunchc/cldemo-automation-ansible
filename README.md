@@ -178,12 +178,154 @@ If you have been following along, so far you have reviewed the tc classification
 - Assign a traffic filter to the classification
 - Test the filter
 
+#### Getting Started
 
+To get started run the following:
+
+```
+tmuxinator start lab3
+```
+
+What this does is open three tmux windows to server02 and server01 in our lab.
+
+#### Configure HTB on eth0 on server02
+
+From the first tmux window 'htb' (or ssh to server02), we need to run the following to change the traffic policy for eth0:
+
+First, confirm the existing policy:
+```
+ sudo tc qdisc show dev eth0
+qdisc pfifo_fast 0: root refcnt 2 bands 3 priomap  1 2 2 2 1 2 0 0 1 1 1 1 1 1 1 1
+```
+
+What we're interested in the prior output is ```pfifo_fast```, which is generally the default for most Linux distributions.
+
+Now to change it, we run the following:
+
+```
+sudo tc qdisc add \
+  dev eth0 \
+  root \
+  handle 1:0 \
+  htb
+
+sudo tc qdisc show dev eth0
+qdisc htb 1: root refcnt 2 r2q 10 default 0 direct_packets_stat 72 direct_qlen 1000
+```
+
+As the ```add``` command produces no output on success, we re-ran the show command. You'll notice where pfifo changed to htb in the output.
+
+#### Define a traffic classification
+
+Next up, we need to add a classifier for the traffic. For us that means setting it's floor, ceiling, and burst rates. For this example, we are going to guarantee 1Kbps of traffic with a ceiling of 10Kbps, and a burst rate of 15Kbps:
+
+```
+sudo tc class show dev eth0
+
+sudo tc class add \
+  dev eth0 \
+  parent 1:1 \
+  classid 1:6 \
+  htb \
+  rate 1kbit \
+  ceil 10kbit \
+  burst 15kbit
+
+sudo tc class show dev eth0
+class htb 1:6 root prio 0 rate 1Kbit ceil 10Kbit burst 1920b cburst 1600b
+```
+
+You will notice a few things in the above code block. First, is that the show command will produce no output if there is no class defined. Next you will note how we specify line rates. Finally, you'll notice that we indeed classified traffic and assigned it the 1, 10, and 15Kbit rates respectively.
+
+#### Add a filter to match traffic and assigne it a class
+
+Our last step before testing, is to define what manner of traffic we are looking for, build a filter, and assign it to the class we just created. For our example we are going on the hunt for multicast traffic. We'll define the filter in two steps:
+
+- Tell TC to look for packets with a netfilter marking of 42
+- Use iptables to match multicast traffic, and mark it '42'
+
+> Note, how we mark the packets is arbitrary. Pick something meaningful to you.
+
+First we tell TC to be on the lookout for marked packets as follows:
+
+```
+sudo tc filter show dev eth0
+
+
+sudo tc filter add \
+  dev eth0 \
+  proto ip \
+  parent 1: \
+  prio 1 \
+  handle 42 \
+  fw \
+  classid 1:100
+
+sudo tc filter show dev eth0
+filter parent 1: protocol ip pref 1 fw
+filter parent 1: protocol ip pref 1 fw handle 0x2a classid 1:100
+```
+
+You'll again notice some things in the output:
+
+- The show command produces no output unless there is a filter
+- Add filter uses 'handle' clause to define which packet marking to look for.
+- 'fw' specifies that the fw (iptables) will be marking said packets.
+- prio specifies priorities within the class queue
+
+Next we tell iptables to mark our packets as follows:
+
+```
+sudo iptables -t mangle \
+    -A OUTPUT \
+    -m pkttype \
+    --pkt-type multicast \
+    -j MARK \
+    --set-mark 42
+
+sudo iptables -t mangle \
+    -A OUTPUT \
+    -m pkttype \
+    --pkt-type multicast \
+    -j RETURN
+
+sudo iptables -L -vt mangle
+Chain OUTPUT (policy ACCEPT 7 packets, 1016 bytes)
+ pkts bytes target     prot opt in     out     source               destination
+    0     0 MARK       all  --  any    any     anywhere             anywhere             PKTTYPE = multicast MARK set 0x2a
+    0     0 RETURN     all  --  any    any     anywhere             anywhere             PKTTYPE = multicast
+```
+
+The two iptables commands above specify we want to grab traffic of type multicast and mark it. We then want to return to normal packet processing. The final command shows that these rules were added to the mangle table.
+
+#### Testing our new filter
+
+To test this filter, we have set up an iperf server running on server02 that is listening to the multicast address 226.94.1.1. You will want to switch to the server01-iperf window (ctrl + b 1) and run the following:
+
+
+
+## Advanced Labs
+
+Now that you are comfortable with classifying traffic, we should apply these lessons to some more interesting Linux networking use cases. The next labs explore OVS, Linux Bridge, as well as identifying and limiting multicast traffic.
 
 ### Lab 4 - TC with OVS
 
+In this lab you will be working with OVS or Open vSwitch. Specifically we will:
+
+- install and configure OVS on server02
+- Apply traffic shaping to OVS interfaces
+- Wrap up by testing with iperf
+
 
 ### Lab 5 - TC with Linux Bridge
+
+In this lab you will be working with Linux Bridge. Specifically we will:
+
+- configure linux bridge interfaces
+- Apply traffic shaping to the newly created interfaces
+- Wrap up by testing with iperf
+
+### Lab 6 - Multicast Traffic
 
 
 
