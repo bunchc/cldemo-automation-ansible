@@ -24,6 +24,22 @@ Quickstart: Run the demo
     ansible-playbook run-demo.yml
     tmuxinator start iperf
 
+The above sequence will launch all of the virtual machines and network devices needed for the lab. Additionally, it will start a pre-staged tmux session on the ```oob-mgmt-server``` that initiates the following:
+
+- Screen 1:
+    + iperf server, host server02, port 8000
+    + iperf server, host server02, port 8080
+    + iperf client, host server01
+        * 5 minute, bi-directional
+        * reporting at 5 second intervals
+        * port 8000
+    + iperf client, host server01
+        * 5 minute, bi-directional
+        * reporting at 5 second intervals
+        * port 8080
+- Screen 2:
+    + bmon
+        * breaks down the HTB queues & bandwidth within them.
 
 Topology
 --------
@@ -56,26 +72,36 @@ This lab configures HTB or hierarchical token bucket as the preferred packet sch
 ### Exploring server02
 Your tmux session on server01 will have a window configured to ssh in to server02 as the user cumulus. Select this window by pressing ctrl+b 
 
-#### Show the tc queuing type for eth1
+#### Show the tc queuing type for eth2
 
 ```
-tc qdisc show dev eth1
+sudo su -
+tc qdisc show dev eth2
 ```
 
-You'll see that the you have htb configured.
+You'll see that the you have htb configured:
+
+```
+qdisc htb 1: root refcnt 2 r2q 10 default 0 direct_packets_stat 21 direct_qlen 1000
+```
 
 #### Show the tc classifications for eth1
 
 ```
-tc qdisc class show dev eth1
+tc class show dev eth1
 ```
 
-The above command lists each of the classes running on eth1:
+The above command lists each of the classes running on eth2. The first 8080 has a floor and ceiling of 500kbps. The second, 8000, at 1Mbps:
+
+```
+class htb 1:8080 root prio 0 rate 500Kbit ceil 500Kbit burst 1600b cburst 1600b
+class htb 1:8000 root prio 0 rate 1Mbit ceil 1Mbit burst 1600b cburst 1600b
+```
 
 #### Show the tc filters on eth1
 
 ```
-tc qdisc filter show dev eth2
+tc filter show dev eth2
 ```
 
 Here you will see three filters. Two with the u32 classifier, one set to look for packets marked by IPTables:
@@ -91,6 +117,57 @@ filter parent 1: protocol ip pref 2 fw
 filter parent 1: protocol ip pref 2 fw handle 0x6 classid 1:1
 ```
 
+
+Scenarios
+---------
+
+Out of the box, the pre-staged tmux environment will show off the ceiling (threshold) and burst capabilities of our tc policies. However, you may wish to explore in further detail. 
+
+> Note: You'll need to be able to navigate tmux to proceed from this point. That is a bit beyond our scope, but there is a great cheatsheet [here.](https://gist.github.com/MohamedAlaa/2961058)
+
+### Lab 1 - Investigating the floor (traffic guarantee)
+
+In this scenario, we will test the ability of tc & htb to guarantee minimum traffic performance. To do this we will need to exit our first set of tmux sessions (```ctrl + b :kill-session```).
+
+To start lab 1, as the cumulus user on oob-mgmt-server, run:
+
+```
+tmuxinator start lab1
+```
+
+This command will start:
+- Tmux
+    + Window 1 - Traffic Generation
+        * Pane 1 - iperf client to port 8000 (guaranteed 500Kbps)
+        * Pane 2 - iperf client default port (the control)
+        * Pane 3 - iperf server port 8000
+        * Pane 4 - iperf server default port
+    + Window 2 - Bmon
+    + Window 3 - ssh to server02
+
+The first pair of iperf sessions on port 8000 are to test the guaranteed performance of 500Kbps. This should hold steady, even given the second pair of iperf connections, that will send traffic as fast as possible.
+
+### Lab 2 - Lab 1, but with IPTables
+
+In this scenario, we will test the ability of tc & htb along with iptables to guarantee minimum traffic performance. To do this we will need to exit any existing tmux sessions (```ctrl + b :kill-session```).
+
+To start lab 1, as the cumulus user on oob-mgmt-server, run:
+
+```
+tmuxinator start lab2
+```
+
+This command will start:
+- Tmux
+    + Window 1 - Traffic Generation
+        * Pane 1 - iperf client to port 8080 (guaranteed 1Mbps)
+        * Pane 2 - iperf client default port (the control)
+        * Pane 3 - iperf server port 8000
+        * Pane 4 - iperf server default port
+    + Window 2 - Bmon
+    + Window 3 - ssh to server02
+
+The first pair of iperf sessions on port 8080 test the guaranteed performance of 1Mbps. This should hold steady, even given the second pair of iperf connections, that will send traffic as fast as possible.
 
 Resources
 ---------

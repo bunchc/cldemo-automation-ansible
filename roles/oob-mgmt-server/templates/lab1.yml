@@ -1,6 +1,6 @@
 # ~/.tmuxinator/iperf.yml
 
-name: iperf
+name: lab1
 root: ~/
 
 # Optional. tmux socket
@@ -26,9 +26,9 @@ windows:
       layout: tiled
       panes:
         - ssh server01 -t "sleep 10; sudo iperf -c 172.16.2.101 -t 300 -d -p 8000 -i 5"
-        - ssh server01 -t "sleep 10; sudo iperf -c 172.16.2.101 -t 300 -d -p 8080 -i 5"
+        - ssh server01 -t "sleep 10; sudo iperf -c 172.16.2.101 -t 300 -d -i 5"
         - ssh server02 -t "sudo iperf -s -p 8000"
-        - ssh server02 -t "sudo iperf -s -p 8080"
+        - ssh server02 -t "sudo iperf -s"
   - bmon:
       layout: tiled
       panes:
