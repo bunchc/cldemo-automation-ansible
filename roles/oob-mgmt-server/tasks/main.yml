@@ -16,7 +16,7 @@
   become_method: sudo
 
 - name: Setup tmuxinator environment
-  template: src={{ item }} dest=~/.tmuxinator/{{ item }} owner=cumulus
+  template: src={{ item }} dest=~/.tmuxinator/{{ item | basename }} owner=cumulus
   become: true
   become_user: cumulus
   become_method: sudo
