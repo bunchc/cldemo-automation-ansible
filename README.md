@@ -162,12 +162,30 @@ This command will start:
     + Window 1 - Traffic Generation
         * Pane 1 - iperf client to port 8080 (guaranteed 1Mbps)
         * Pane 2 - iperf client default port (the control)
-        * Pane 3 - iperf server port 8000
+        * Pane 3 - iperf server port 8080
         * Pane 4 - iperf server default port
     + Window 2 - Bmon
     + Window 3 - ssh to server02
 
 The first pair of iperf sessions on port 8080 test the guaranteed performance of 1Mbps. This should hold steady, even given the second pair of iperf connections, that will send traffic as fast as possible.
+
+### Lab 3 - Configuring a filter
+
+If you have been following along, so far you have reviewed the tc classifications and filters that are part of the lab. You will have also tested them using iperf. In this lab, we will:
+
+- Configure eth0 to use HTB
+- Define a traffic classification
+- Assign a traffic filter to the classification
+- Test the filter
+
+
+
+### Lab 4 - TC with OVS
+
+
+### Lab 5 - TC with Linux Bridge
+
+
 
 Resources
 ---------

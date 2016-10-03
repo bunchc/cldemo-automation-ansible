@@ -15,8 +15,13 @@
   become_user: cumulus
   become_method: sudo
 
+- name: Get a list of tmuxinator files
+  action: command ls -1 roles/oob-mgmt-server/templates/*.yml
+  register: tmuxfiles
+
 - name: Setup tmuxinator environment
-  template: src=roles/oob-mgmt-server/templates/iperf.yml dest=~/.tmuxinator/iperf.yml owner=cumulus
+  template: src=$item dest=~/.tmuxinator/ owner=cumulus
   become: true
   become_user: cumulus
   become_method: sudo
+  with_items: ${tmuxfiles.stdout_lines}
