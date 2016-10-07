@@ -30,5 +30,14 @@
 - name: Configure bridge interface
   template: src=../templates/interfaces dest=/etc/network/interfaces
 
+- name: Enable IP forwarding
+  sysctl: name="net.ipv4.ip_forward" value=1 sysctl_set=yes
+  become: true
+  become_user: root
+  become_method: sudo
+
 - name: reload networking legacy
   shell: ifdown --force -a && ifup --force -a
+  become: true
+  become_user: root
+  become_method: sudo
