@@ -1,6 +1,6 @@
 # Install and configure OVS for interface eth2 on server02
 
-- name: Install openvswitch
+- name: Install KVM
   apt: name={{ item }} update_cache=yes
   with_items:
     - qemu-kvm
@@ -10,9 +10,9 @@
     - virtinst
 
 - name: Add user cumulus to libvirtd and kvm group
-  command: "sudo adduser `id -un` libvirtd && sudo adduser `id -un` kvm"
+  command: "adduser cumulus libvirtd && adduser cumulus kvm"
   become: true
-  become_user: cumulus
+  become_user: root
   become_method: sudo
 
 - name: apt-get dist-upgrade -qy
