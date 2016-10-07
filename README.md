@@ -251,7 +251,6 @@ First we tell TC to be on the lookout for marked packets as follows:
 ```
 sudo tc filter show dev eth0
 
-
 sudo tc filter add \
   dev eth0 \
   proto ip \
@@ -259,11 +258,11 @@ sudo tc filter add \
   prio 1 \
   handle 42 \
   fw \
-  classid 1:100
+  classid 1:6
 
 sudo tc filter show dev eth0
 filter parent 1: protocol ip pref 1 fw
-filter parent 1: protocol ip pref 1 fw handle 0x2a classid 1:100
+filter parent 1: protocol ip pref 1 fw handle 0x2a classid 1:6
 ```
 
 You'll again notice some things in the output:
@@ -277,14 +276,16 @@ Next we tell iptables to mark our packets as follows:
 
 ```
 sudo iptables -t mangle \
-    -A OUTPUT \
+    -A INPUT \
+    -i eth0 \
     -m pkttype \
     --pkt-type multicast \
     -j MARK \
     --set-mark 42
 
 sudo iptables -t mangle \
-    -A OUTPUT \
+    -A INPUT \
+    -i eth0 \
     -m pkttype \
     --pkt-type multicast \
     -j RETURN
@@ -300,9 +301,12 @@ The two iptables commands above specify we want to grab traffic of type multicas
 
 #### Testing our new filter
 
-To test this filter, we have set up an iperf server running on server02 that is listening to the multicast address 226.94.1.1. You will want to switch to the server01-iperf window (ctrl + b 1) and run the following:
+To test this filter, we have set up an iperf server running on server02 that is listening to the multicast address 226.94.1.1. However, we still need to ensure traffic will only flow out eth0 from server01. We'll also want to send traffic. To do this, switch to the server01-iperf window (ctrl + b 1) or ssh to server01 and run the following:
 
-
+```
+sudo ifdown eth1
+sudo iperf -c 226.94.1.1 -u -T 32 -t 300 -d -i 1 -B 192.168.0.32
+```
 
 ## Advanced Labs
 

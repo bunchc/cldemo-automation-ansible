@@ -1,0 +1,9 @@
+---
+- hosts: server02
+  user: cumulus
+  become: yes
+  become_method: sudo
+  roles:
+    - reset_interfaces
+    - install_kvm
+    - install_ovs

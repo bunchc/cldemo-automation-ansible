@@ -1,0 +1,4 @@
+# Delete the HTB qdisc on eth2 so we can configure OVS to use the interface later.
+
+- name: Change eth2 back to pfifo
+  command: " tc qdisc del dev eth2 root handle 1:"

@@ -1,0 +1,31 @@
+# Removes linuxbridge, installs, and configurea OVS for interface eth2 on server02
+
+- name: Remove default bridge
+  command: "{{ item }}"
+  with_items:
+    - virsh net-destroy default
+    - virsh net-autostart --disable default
+  become: true
+  become_user: root
+  become_method: sudo
+
+- name: Remove ebtables
+  apt: name=ebtables state=absent
+
+- name: Install openvswitch
+  apt: name={{ item }} update_cache=yes
+  with_items:
+    - openvswitch-common
+    - openvswitch-switch
+
+- name: Start Open vSwitch
+  service: name=openvswitch-switch state=started
+
+- name: Set up OVS Bridge
+  command: "{{ item }}"
+  with_items:
+    - ovs-vsctl add-br br0
+    - ovs-vsctl add-port br0 eth2
+
+- name: Configure bridge interface
+  template: src=../templates/interfaces dest=/etc/network/interfaces

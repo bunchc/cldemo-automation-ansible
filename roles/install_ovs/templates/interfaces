@@ -1,0 +1,18 @@
+# Reset interfaces file for bridging
+auto lo
+iface lo inet loopback
+
+# The primary network interface
+auto eth2
+iface eth2 inet static
+
+# The OVS bridge interface
+auto br0
+iface br0 inet static
+  address 172.16.2.101
+  netmask 255.255.255.0
+  bridge_ports eth2
+  bridge_fd 9
+  bridge_hello 2
+  bridge_maxage 12
+  bridge_stp off
