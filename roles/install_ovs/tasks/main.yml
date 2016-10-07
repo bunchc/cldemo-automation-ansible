@@ -29,3 +29,6 @@
 
 - name: Configure bridge interface
   template: src=../templates/interfaces dest=/etc/network/interfaces
+
+- name: reload networking legacy
+  shell: ifdown --force -a && ifup --force -a
