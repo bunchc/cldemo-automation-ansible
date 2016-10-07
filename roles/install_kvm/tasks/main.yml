@@ -10,7 +10,10 @@
     - virtinst
 
 - name: Add user cumulus to libvirtd and kvm group
-  command: "adduser cumulus libvirtd && adduser cumulus kvm"
+  command: "{{ items }}"
+  with_items:
+    - adduser cumulus libvirtd
+    - adduser cumulus kvm
   become: true
   become_user: root
   become_method: sudo
