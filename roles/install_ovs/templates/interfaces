@@ -8,7 +8,7 @@ iface eth0 inet dhcp
 
 # Set eth2 for bridging
 auto eth2
-iface eth2 inet static
+iface eth2 inet manual
 
 # The OVS bridge interface
 auto br0
