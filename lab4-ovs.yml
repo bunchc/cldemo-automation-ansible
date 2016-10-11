@@ -7,3 +7,4 @@
     - reset_interfaces
     - install_kvm
     - install_ovs
+    - build_vms

@@ -1,0 +1,27 @@
+# From https://github.com/sfromm/ansible-playbooks/blob/master/vars/guests.yml
+---
+guests:
+    - name: nested01
+      url: http://releases.ubuntu.com/16.04/
+      cpu: 1
+      mem: 256
+      virt_type: kvm
+      virt_hypervisor: hvm
+      os:
+          type: linux
+          variant: ubuntu
+      disk:
+          size: 5
+          path: /var/lib/libvirt/images
+    - name: nested02
+      url: http://releases.ubuntu.com/16.04/
+      cpu: 1
+      mem: 256
+      virt_type: kvm
+      virt_hypervisor: hvm
+      os:
+          type: linux
+          variant: ubuntu
+      disk:
+          size: 5
+          path: /var/lib/libvirt/images
