@@ -9,9 +9,6 @@
   become_user: root
   become_method: sudo
 
-- name: Remove ebtables
-  apt: name=ebtables state=absent
-
 - name: Install openvswitch
   apt: name={{ item }} update_cache=yes
   with_items:
