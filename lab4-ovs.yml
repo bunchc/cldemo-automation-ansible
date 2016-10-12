@@ -1,4 +1,7 @@
 ---
+- include_vars:
+  file: group_vars/guests.yml
+
 - hosts: server02
   user: cumulus
   become: yes

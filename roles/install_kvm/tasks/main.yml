@@ -1,7 +1,10 @@
 # Install and configure OVS for interface eth2 on server02
 
+- name: apt-get update
+  apt: update_cache=yes
+
 - name: Install KVM
-  apt: name={{ item }} update_cache=yes
+  apt: name={{ item }} state=present
   with_items:
     - qemu-kvm
     - libvirt-bin

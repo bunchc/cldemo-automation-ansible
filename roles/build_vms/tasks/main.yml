@@ -1,8 +1,5 @@
 # From here https://github.com/sfromm/ansible-playbooks/blob/master/virt-guests.yml
 
-- include_vars:
-  file: group_vars/guests.yml
-
 - name: start libvirtd
   service: name=libvirtd state=started enabled=yes
   register: libvirtd
