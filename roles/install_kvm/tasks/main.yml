@@ -3,6 +3,9 @@
 - name: apt-get update
   apt: update_cache=yes
 
+- name: apt-get dist-upgrade -qy
+  apt: upgrade=dist
+
 - name: Install KVM
   apt: name={{ item }} state=present
   with_items:
@@ -20,6 +23,3 @@
   become: true
   become_user: root
   become_method: sudo
-
-- name: apt-get dist-upgrade -qy
-  apt: upgrade=dist
