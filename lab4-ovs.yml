@@ -1,11 +1,11 @@
 ---
-- include_vars:
-  file: group_vars/guests.yml
-
-- hosts: server02
+- name: Configure Lab 4
+  hosts: server02
   user: cumulus
   become: yes
   become_method: sudo
+  vars_files:
+    - "{{ guest_vars | default('host_vars/server02') }}"
   roles:
     - reset_interfaces
     - install_kvm
