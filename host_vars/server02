@@ -9,9 +9,9 @@ guests:
       virt_hypervisor: hvm
       os:
           type: linux
-          variant: ubuntu
+          variant: ubuntu16.04
       disk:
-          size: 5
+          size: 8
           path: /var/lib/libvirt/images
     - name: nested02
       url: http://us.archive.ubuntu.com/ubuntu/dists/xenial/main/installer-i386/
@@ -21,7 +21,7 @@ guests:
       virt_hypervisor: hvm
       os:
           type: linux
-          variant: ubuntu
+          variant: ubuntu16.04
       disk:
-          size: 5
+          size: 8
           path: /var/lib/libvirt/images
