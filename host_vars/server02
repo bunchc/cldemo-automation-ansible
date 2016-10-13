@@ -2,10 +2,10 @@
 ---
 guests:
     - name: nested01
-      url: http://releases.ubuntu.com/16.04/
+      url: http://us.archive.ubuntu.com/ubuntu/dists/xenial/main/installer-i386/
       cpu: 1
       mem: 256
-      virt_type: kvm
+      virt_type: qemu
       virt_hypervisor: hvm
       os:
           type: linux
@@ -14,10 +14,10 @@ guests:
           size: 5
           path: /var/lib/libvirt/images
     - name: nested02
-      url: http://releases.ubuntu.com/16.04/
+      url: http://us.archive.ubuntu.com/ubuntu/dists/xenial/main/installer-i386/
       cpu: 1
       mem: 256
-      virt_type: kvm
+      virt_type: qemu
       virt_hypervisor: hvm
       os:
           type: linux
