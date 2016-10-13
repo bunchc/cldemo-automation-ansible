@@ -19,7 +19,7 @@
            --location {{ item.url }}
            --os-type {{ item.os.type }}
            --os-variant {{ item.os.variant }}
-           --network network=default
+           --network bridge=br0
            --graphics vnc
            --{{item.virt_hypervisor}}
            --virt-type {{ item.virt_type }}
